@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guía de restricciones en Windows</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --primary-soft:#eff6ff;
+      --success:#15803d;
+      --success-soft:#f0fdf4;
+      --warn:#b45309;
+      --warn-soft:#fffbeb;
+      --danger:#b91c1c;
+      --danger-soft:#fef2f2;
+      --border:#e5e7eb;
+      --code:#111827;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right, #dbeafe 0, transparent 26%),
+        linear-gradient(180deg,#f8fafc 0%,var(--bg) 100%);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    .container{
+      width:min(1050px,92%);
+      margin:0 auto;
+      padding:42px 0 70px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#3b82f6);
+      color:white;
+      border-radius:24px;
+      padding:34px;
+      box-shadow:var(--shadow);
+      margin-bottom:26px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(1.8rem,4vw,2.8rem);
+      line-height:1.1;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:800px;
+      color:#dbeafe;
+      font-size:1.04rem;
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin:22px 0 28px;
+    }
+
+    .summary-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 6px 18px rgba(15,23,42,.05);
+    }
+
+    .summary-card strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:4px;
+    }
+
+    .summary-card span{color:var(--muted)}
+
+    .section{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:28px;
+      margin-top:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .section h2{
+      margin-top:0;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-size:1.45rem;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      background:var(--primary-soft);
+      color:var(--primary);
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    .step{
+      display:grid;
+      grid-template-columns:38px 1fr;
+      gap:12px;
+      margin:20px 0;
+      align-items:start;
+    }
+
+    .step-num{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:#e0e7ff;
+      color:#3730a3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+    }
+
+    .step h3{
+      margin:1px 0 6px;
+      font-size:1.05rem;
+    }
+
+    .step p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .code-wrap{
+      position:relative;
+      margin-top:10px;
+    }
+
+    pre{
+      margin:0;
+      padding:16px 48px 16px 16px;
+      border-radius:14px;
+      background:var(--code);
+      color:#e5e7eb;
+      overflow:auto;
+      font-size:.94rem;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .copy{
+      position:absolute;
+      top:9px;
+      right:9px;
+      border:0;
+      border-radius:9px;
+      padding:7px 10px;
+      background:#374151;
+      color:white;
+      cursor:pointer;
+      font-size:.8rem;
+    }
+
+    .copy:hover{background:#4b5563}
+
+    .note{
+      border-left:5px solid var(--warn);
+      background:var(--warn-soft);
+      padding:15px 17px;
+      border-radius:12px;
+      margin-top:18px;
+      color:#78350f;
+    }
+
+    .success{
+      border-left-color:var(--success);
+      background:var(--success-soft);
+      color:#166534;
+    }
+
+    .danger{
+      border-left-color:var(--danger);
+      background:var(--danger-soft);
+      color:#991b1b;
+    }
+
+    .checklist{
+      margin:12px 0 0;
+      padding-left:20px;
+    }
+
+    .checklist li{margin:7px 0}
+
+    .path{
+      display:inline-block;
+      font-family:Consolas,monospace;
+      background:#f3f4f6;
+      border:1px solid #e5e7eb;
+      border-radius:7px;
+      padding:2px 7px;
+      color:#374151;
+    }
+
+    .result{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .result div{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      background:#fafafa;
+    }
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:28px;
+      font-size:.9rem;
+    }
+
+    @media (max-width:640px){
+      .container{width:min(94%,1050px);padding-top:20px}
+      .hero,.section{padding:21px;border-radius:18px}
+      .step{grid-template-columns:32px 1fr}
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Restricciones en Windows</h1>
+      <p>Guía rápida para bloquear la instalación de extensiones en Microsoft Edge y bloquear el acceso a Microsoft Store para todos los usuarios del equipo.</p>
+    </section>
+
+    <div class="summary">
+      <div class="summary-card">
+        <strong>🌐 Microsoft Edge</strong>
+        <span>Impide instalar cualquier extensión.</span>
+      </div>
+      <div class="summary-card">
+        <strong>🛒 Microsoft Store</strong>
+        <span>Bloquea su ejecución mediante AppLocker.</span>
+      </div>
+      <div class="summary-card">
+        <strong>👥 Alcance</strong>
+        <span>Configuración pensada para todos los usuarios.</span>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2><span class="badge">1</span> Bloquear extensiones en Microsoft Edge</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Abre PowerShell como administrador</h3>
+          <p>Busca PowerShell, haz clic derecho y selecciona <strong>Ejecutar como administrador</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Elimina una configuración anterior incorrecta, si existiera</h3>
+          <div class="code-wrap">
+            <pre><code>Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "ExtensionInstallBlocklist" -ErrorAction SilentlyContinue</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Crea la lista de bloqueo</h3>
+          <div class="code-wrap">
+            <pre><code>New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist" -Force | Out-Null</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>Bloquea todas las extensiones</h3>
+          <div class="code-wrap">
+            <pre><code>New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist" -Name "1" -PropertyType String -Value "*" -Force</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <p style="margin-top:8px;">El valor <strong>*</strong> significa: bloquear todas las extensiones.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h3>Comprueba la política</h3>
+          <p>Abre Edge y escribe:</p>
+          <div class="code-wrap">
+            <pre><code>edge://policy</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <p style="margin-top:8px;">Pulsa <strong>Volver a cargar directivas</strong> y verifica que aparezca <strong>ExtensionInstallBlocklist</strong> sin errores.</p>
+        </div>
+      </div>
+
+      <div class="note success">
+        <strong>Resultado:</strong> ningún usuario del equipo podrá instalar extensiones en Microsoft Edge.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="badge">2</span> Bloquear Microsoft Store con AppLocker</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Activa Identidad de aplicación</h3>
+          <p>En PowerShell como administrador ejecuta:</p>
+          <div class="code-wrap">
+            <pre><code>sc.exe config appidsvc start=auto
+Start-Service AppIDSvc</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <p style="margin-top:8px;">Comprueba el estado con:</p>
+          <div class="code-wrap">
+            <pre><code>Get-Service AppIDSvc</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <p style="margin-top:8px;">Debe aparecer como <strong>Running</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Abre AppLocker</h3>
+          <p>Presiona <strong>Win + R</strong>, escribe <span class="path">secpol.msc</span> y ve a:</p>
+          <p style="margin-top:7px;"><strong>Directivas de control de aplicaciones → AppLocker → Reglas de aplicaciones empaquetadas</strong></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Crea las reglas predeterminadas</h3>
+          <p>Clic derecho en <strong>Reglas de aplicaciones empaquetadas → Crear reglas predeterminadas</strong>.</p>
+          <div class="note">
+            Esto permite que las demás aplicaciones empaquetadas de Windows sigan funcionando.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>Crea la regla para Microsoft Store</h3>
+          <p>Clic derecho → <strong>Crear nueva regla</strong> y configura:</p>
+          <ul class="checklist">
+            <li><strong>Acción:</strong> Denegar</li>
+            <li><strong>Usuario o grupo:</strong> Todos</li>
+            <li><strong>Referencia:</strong> aplicación empaquetada instalada</li>
+            <li><strong>Aplicación:</strong> Microsoft Store / Microsoft.WindowsStore</li>
+            <li><strong>Nombre:</strong> BLOQUEAR - Microsoft Store</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h3>Activa la aplicación de las reglas</h3>
+          <p>Clic derecho sobre <strong>AppLocker → Propiedades</strong>. En <strong>Reglas de aplicaciones empaquetadas</strong> marca <strong>Configuradas</strong> y selecciona <strong>Aplicar reglas</strong>.</p>
+          <div class="note danger">
+            No dejes la colección en <strong>Solo auditoría</strong>, porque en ese modo Store no será bloqueada.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div>
+          <h3>Actualiza las políticas y reinicia</h3>
+          <div class="code-wrap">
+            <pre><code>gpupdate /force
+shutdown /r /t 0</code></pre>
+            <button class="copy" onclick="copyCode(this)">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="note success">
+        <strong>Resultado:</strong> Microsoft Store puede seguir mostrando su icono, pero al intentar abrirla AppLocker debe impedir su ejecución.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="badge">✓</span> Resultado esperado</h2>
+      <div class="result">
+        <div><strong>ADMIN</strong><br>❌ Store<br>❌ Instalar extensiones</div>
+        <div><strong>ALUMNO</strong><br>❌ Store<br>❌ Instalar extensiones</div>
+        <div><strong>Otros usuarios</strong><br>❌ Store<br>❌ Instalar extensiones</div>
+      </div>
+
+      <div class="note" style="margin-top:20px;">
+        <strong>Recomendación:</strong> para bloquear Store, evita usar <span class="path">Remove-AppxPackage</span>. Es preferible mantener Microsoft Store instalada y bloquear su ejecución mediante AppLocker.
+      </div>
+    </section>
+
+    <footer>
+      Guía de administración local de Windows · Edge + Microsoft Store
+    </footer>
+  </main>
+
+  <script>
+    function copyCode(btn){
+      const code = btn.parentElement.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copiado';
+        setTimeout(() => btn.textContent = old, 1200);
+      });
+    }
+  </script>
+</body>
+</html>
